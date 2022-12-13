@@ -4,6 +4,7 @@ import experimentalThemePlugin from './experimentalThemePlugin';
 import youTubeSource from './sources/youtube';
 import soundCloudSource from './sources/soundcloud';
 import readApplicationConfig from './utils/readApplicationConfig';
+import { isDecember, letItSnow } from './utils/christmas';
 
 const uw = new Uwave(readApplicationConfig());
 
@@ -15,6 +16,10 @@ uw.source(youTubeSource());
 uw.source(soundCloudSource());
 
 window.uw = uw;
+
+if (isDecember()) {
+  letItSnow();
+}
 
 load(uw).catch((err) => {
   setTimeout(() => {

@@ -3,8 +3,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import IconButton from '@mui/material/IconButton';
 import AboutIcon from '@mui/icons-material/ArrowDropDown';
+import { isDecember } from '../../utils/christmas';
 
-const logo = new URL('../../../assets/img/logo-white.png', import.meta.url);
+const christmasLogo = new URL('../../../assets/img/logo-christmas.gif', import.meta.url);
+const normalLogo = new URL('../../../assets/img/logo-white.png', import.meta.url);
+
+const logo = isDecember() ? christmasLogo : normalLogo;
 
 // We use `logo.pathname` to ensure that the prerendered loading screen
 // does not include a `file://` prefix. This should still work fine in browsers

@@ -1,6 +1,7 @@
 import './bans';
 import './chat';
 import './help';
+import './memes';
 import './mutes';
 import './playback';
 import './staff';

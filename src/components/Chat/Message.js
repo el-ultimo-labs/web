@@ -9,9 +9,7 @@ import compile from './Markup/compile';
 import DeleteButton from './DeleteButton';
 import MessageTimestamp from './MessageTimestamp';
 
-const {
-  useCallback,
-} = React;
+const { useCallback } = React;
 
 function Message({
   _id: id,
@@ -33,22 +31,6 @@ function Message({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  let avatar;
-  if (inFlight) {
-    avatar = (
-      <div className="ChatMessage-avatar">
-        <CircularProgress size="100%" />
-      </div>
-    );
-  } else {
-    avatar = (
-      <Avatar
-        className="ChatMessage-avatar"
-        user={user}
-      />
-    );
-  }
-
   const children = parsedText ? compile(parsedText, compileOptions) : text;
 
   const date = new Date(timestamp);
@@ -58,10 +40,19 @@ function Message({
     inFlight && 'ChatMessage--loading',
     isMention && 'ChatMessage--mention',
   );
+
+  const avatarClassname = 'ChatMessage-avatar';
+
   return (
     <div className={className} ref={userCard.refAnchor}>
       {userCard.card}
-      {avatar}
+      {inFlight ? (
+        <div className={avatarClassname}>
+          <CircularProgress size="100%" />
+        </div>
+      ) : (
+        <Avatar className={avatarClassname} user={user} />
+      )}
       <div className="ChatMessage-content">
         <div className="ChatMessage-hover">
           {deletable && <DeleteButton onDelete={() => onDelete(id)} />}

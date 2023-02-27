@@ -35,8 +35,9 @@ uwave:
     title: Chat
     placeholder: Click here to chat!
     label: Chat message
-    userJoin: "ey es el {{username}}"
+    userJoin: "ey es le {{username}}"
     femaleUserJoin: "ey es la {{username}}"
+    maleUserJoin: "ey es el {{username}}"
     userLeave: "bai {{username}}"
     userNameChanged: "{{username}} changed their nickname to {{newUsername}}"
     modSkip: "{{username}} skipped {{djName}}'s turn"

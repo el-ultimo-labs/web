@@ -37,9 +37,9 @@
   position: absolute;
   width: 24px;
   height: 24px;
-  top: 0;
+  /* the avatar is vertically centered, i.e. pushed down 50% of its container, and then up half the avatar height */
+  top: calc(50% - 12px);
   inset-inline-start: 12px;
-  margin: 4px 0;
 }
 
 .ChatMessage-content {

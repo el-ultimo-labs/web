@@ -1,4 +1,9 @@
-import React from 'react';
+// @ts-check
+import React, {
+  useCallback,
+  useRef,
+  useState,
+} from 'react';
 import PropTypes from 'prop-types';
 import { useTranslator } from '@u-wave/react-translate';
 import Popover from '@mui/material/Popover';
@@ -8,11 +13,17 @@ import CircularProgress from '@mui/material/CircularProgress';
 import SkipIcon from '@mui/icons-material/SkipNext';
 import SkipReasonsList from './SkipReasonsList';
 
-const {
-  useCallback,
-  useRef,
-  useState,
-} = React;
+/** @returns {[boolean, () => void, () => void]} */
+const usePopoverState = () => {
+  const [popoverIsOpen, setPopoverIsOpen] = useState(false);
+  const handleOpenPopover = useCallback(() => {
+    setPopoverIsOpen(true);
+  }, []);
+  const handleClosePopover = useCallback(() => {
+    setPopoverIsOpen(false);
+  }, []);
+  return [popoverIsOpen, handleOpenPopover, handleClosePopover];
+};
 
 const popoverPosition = {
   marginThreshold: 0,
@@ -21,37 +32,59 @@ const popoverPosition = {
 };
 
 // TODO not hardcode these maybe?
-const reasons = [
-  'genre',
-  'history',
-  'unavailable',
-  'nsfw',
-  'duration',
-  'downvotes',
-  'other',
-];
+const skipOthersOptions = /** @type {const} */ ({
+  genre: 'genre',
+  history: 'history',
+  unavailable: 'unavailable',
+  nsfw: 'nsfw',
+  duration: 'duration',
+  downvotes: 'downvotes',
+  other: 'other',
+});
+const skipSelfOptions = /** @type {const} */ ({
+  SkipNow: 'SkipNow',
+  LeaveAfterThisSong: 'LeaveAfterThisSong',
+});
 
-function SkipButton({ userIsDJ, currentDJ, onSkip }) {
+/**
+ * @typedef {typeof skipOthersOptions} SkipOthersOptions
+ * @typedef {SkipOthersOptions[keyof SkipOthersOptions]} SkipOthersOptionsValue
+ *
+ * @typedef {typeof skipSelfOptions} SkipSelfOptions
+ * @typedef {SkipSelfOptions[keyof SkipSelfOptions]} SkipSelfOptionsValue
+ *
+ * @typedef {SkipOthersOptionsValue | SkipSelfOptionsValue} SkipReason
+ */
+
+function SkipButton({
+  userIsDJ, currentDJ, onSkip, onSkipAfterThisSong,
+}) {
   const { t } = useTranslator();
   const [isSkipping, setSkipping] = useState(false);
-  const [isOpen, setOpen] = useState(false);
   const anchor = useRef(null);
+  const [
+    skipOtherPopoverIsOpen,
+    handleOpenOthersPopover,
+    handleCloseOthersPopover,
+  ] = usePopoverState();
+  const [
+    skipSelfPopoverIsOpen,
+    handleOpenSelfSkipPopover,
+    handleCloseSelfSkipPopover,
+  ] = usePopoverState();
 
-  const handleOpen = useCallback(() => {
-    setOpen(true);
-  }, []);
-  const handleClose = useCallback(() => {
-    setOpen(false);
-  }, []);
-
-  const handleSkip = useCallback((reason) => {
+  const handleSkip = useCallback((/** @type {SkipReason} */ reason) => {
     setSkipping(true);
-    Promise.resolve(onSkip(reason)).finally(() => {
-      setSkipping(false);
-    });
-    setOpen(false);
-  }, [onSkip]);
-  const handleSelfSkip = useCallback(() => handleSkip(''), [handleSkip]);
+    if (reason !== skipSelfOptions.LeaveAfterThisSong) {
+      Promise.resolve(onSkip(reason)).finally(() => {
+        setSkipping(false);
+      });
+    } else {
+      onSkipAfterThisSong();
+    }
+    handleCloseOthersPopover();
+    handleCloseSelfSkipPopover();
+  }, [onSkip, handleCloseOthersPopover, onSkipAfterThisSong, handleCloseSelfSkipPopover]);
 
   if (isSkipping) {
     return (
@@ -74,23 +107,44 @@ function SkipButton({ userIsDJ, currentDJ, onSkip }) {
         <IconButton
           ref={anchor}
           className="SkipButton"
-          onClick={userIsDJ ? handleSelfSkip : handleOpen}
+          onClick={userIsDJ ? handleOpenSelfSkipPopover : handleOpenOthersPopover}
         >
           <SkipIcon />
         </IconButton>
       </Tooltip>
       <Popover
-        open={isOpen}
+        open={skipOtherPopoverIsOpen}
         anchorEl={anchor.current}
-        onClose={handleClose}
+        onClose={handleCloseOthersPopover}
         classes={{ paper: 'SkipButton-list' }}
         {...popoverPosition}
       >
         <SkipReasonsList
-          reasons={reasons.map((name) => ({
-            name,
-            label: t(`booth.skip.reasons.${name}`),
-          }))}
+          reasons={Object
+            .values(skipOthersOptions)
+            .map((name) => ({
+              name,
+              label: t(`booth.skip.reasons.${name}`),
+            }))}
+          onSelect={handleSkip}
+        />
+      </Popover>
+      <Popover
+        open={skipOtherPopoverIsOpen && skipSelfPopoverIsOpen}
+        anchorEl={anchor.current}
+        onClose={handleCloseSelfSkipPopover}
+        classes={{ paper: 'SkipButton-list' }}
+        {...popoverPosition}
+      >
+        <SkipReasonsList
+          reasons={[{
+            name: skipSelfOptions.SkipNow,
+            label: 'Skip now',
+          },
+          {
+            name: skipSelfOptions.LeaveAfterThisSong,
+            label: 'Leave after this song',
+          }]}
           onSelect={handleSkip}
         />
       </Popover>
@@ -102,6 +156,7 @@ SkipButton.propTypes = {
   userIsDJ: PropTypes.bool.isRequired,
   currentDJ: PropTypes.object.isRequired,
   onSkip: PropTypes.func.isRequired,
+  onSkipAfterThisSong: PropTypes.func.isRequired,
 };
 
 export default React.memo(SkipButton);

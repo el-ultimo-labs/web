@@ -86,6 +86,10 @@ function UserFooterContent() {
     return dispatch(leaveWaitlist(currentUser));
   }, [userIsDJ, dispatch, currentUser]);
 
+  const handleLeaveWaitlistWithoutSkipping = useCallback(() => {
+    return dispatch(leaveWaitlist(currentUser));
+  }, [dispatch, currentUser]);
+
   const canVote = !userIsDJ && !!currentDJ;
 
   return (
@@ -131,6 +135,7 @@ function UserFooterContent() {
             userIsDJ={userIsDJ}
             currentDJ={currentDJ}
             onSkip={handleSkipTurn}
+            onSkipAfterThisSong={handleLeaveWaitlistWithoutSkipping}
           />
         </div>
       )}

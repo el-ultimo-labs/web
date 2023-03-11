@@ -170,6 +170,7 @@
     "analyze": "cross-env ANALYZE=1 npm run prod",
     "clean": "rimraf npm/public",
     "dev": "npm run serve -- --watch",
+    "dev:remote": "SERVER_URL=https://bluggo.duckdns.org/ npm run dev",
     "lint": "eslint --cache . && stylelint --cache src/**/*.css",
     "postpublish": "npm publish npm",
     "prerelease": "npm run clean && npm test && npm run prod",

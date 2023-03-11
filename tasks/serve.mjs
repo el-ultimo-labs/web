@@ -50,6 +50,7 @@ const socketUrl = `wss://bluggo.duckdns.org/api`;
 
 app.use(apiUrl, createProxyMiddleware({
   target: serverUrl.href,
+  changeOrigin: true
 }));
 
 app.use('/assets/emoji/', serveStatic(new URL('../assets/fiesta', import.meta.url).pathname));

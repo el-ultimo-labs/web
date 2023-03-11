@@ -86,7 +86,7 @@ function UserFooterContent() {
     return dispatch(leaveWaitlist(currentUser));
   }, [userIsDJ, dispatch, currentUser]);
 
-  const canVote = !userIsDJ && !!currentDJ;
+  const canVote = !!currentDJ;
 
   return (
     <>

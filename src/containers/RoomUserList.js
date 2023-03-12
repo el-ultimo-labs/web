@@ -19,10 +19,10 @@ function RoomUserListContainer({ className }) {
     users.map((user) => ({
       ...user,
       votes: {
-        upvote: votes.upvotes.includes(user._id),
-        downvote: votes.downvotes.includes(user._id),
+        upvote: votes.upvotes.filter((id) => id === user._id).length,
+        downvote: votes.downvotes.filter((id) => id === user._id).length,
         favorite: votes.favorites.includes(user._id),
-        sadvote: votes.sadvotes.includes(user._id),
+        sadvote: votes.sadvotes.filter((id) => id === user._id).length,
       },
     }))
   ), [users, votes]);

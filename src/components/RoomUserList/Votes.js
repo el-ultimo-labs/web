@@ -12,14 +12,23 @@ const Votes = ({
     {favorite && (
       <FavoriteIcon className="UserRow-voteIcon UserRow-voteIcon--favorite" />
     )}
-    {sadvote && (
-      <SadvoteIcon className="UserRow-voteIcon UserRow-voteIcon--sadvote" />
+    {sadvote > 0 && (
+      <div className="ResponseButton-content">
+        <SadvoteIcon className="UserRow-voteIcon UserRow-voteIcon--sadvote" />
+        <span className="ResponseButton-count">{sadvote}</span>
+      </div>
     )}
-    {upvote && (
-      <UpvoteIcon className="UserRow-voteIcon UserRow-voteIcon--upvote" />
+    {upvote > 0 && (
+      <div className="ResponseButton-content">
+        <UpvoteIcon className="UserRow-voteIcon UserRow-voteIcon--upvote" />
+        <span className="ResponseButton-count">{upvote}</span>
+      </div>
     )}
-    {downvote && (
-      <DownvoteIcon className="UserRow-voteIcon UserRow-voteIcon--downvote" />
+    {downvote > 0 && (
+      <div className="ResponseButton-content">
+        <DownvoteIcon className="UserRow-voteIcon UserRow-voteIcon--downvote" />
+        <span className="ResponseButton-count">{downvote}</span>
+      </div>
     )}
   </div>
 );

@@ -42,33 +42,18 @@ export default function reduce(state = initialState, action = {}) {
     case LOAD_VOTES:
       return setVotes(state, payload);
     case UPVOTE:
-      if (state.upvotes.includes(payload.userID)) {
-        return state;
-      }
       return {
         ...state,
         upvotes: [...state.upvotes, payload.userID],
-        downvotes: state.downvotes.filter((vote) => vote !== payload.userID),
-        sadvotes: state.sadvotes.filter((vote) => vote !== payload.userID),
       };
     case DOWNVOTE:
-      if (state.downvotes.includes(payload.userID)) {
-        return state;
-      }
       return {
         ...state,
-        upvotes: state.upvotes.filter((vote) => vote !== payload.userID),
         downvotes: [...state.downvotes, payload.userID],
-        sadvotes: state.sadvotes.filter((vote) => vote !== payload.userID),
       };
     case SADVOTE:
-      if (state.sadvotes.includes(payload.userID)) {
-        return state;
-      }
       return {
         ...state,
-        upvotes: state.upvotes.filter((vote) => vote !== payload.userID),
-        downvotes: state.downvotes.filter((vote) => vote !== payload.userID),
         sadvotes: [...state.sadvotes, payload.userID],
       };
     case FAVORITE:

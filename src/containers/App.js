@@ -10,7 +10,6 @@ import { settingsSelector, themeSelector } from '../selectors/settingSelectors';
 import { translatorSelector } from '../selectors/localeSelectors';
 import { isConnectedSelector } from '../selectors/serverSelectors';
 import DesktopApp from '../components/App';
-import MobileApp from '../mobile/components/App';
 import FatalError from '../components/FatalError';
 import UwaveContext from '../context/UwaveContext';
 import { ClockProvider } from '../context/ClockContext';
@@ -54,7 +53,6 @@ class ErrorWrapper extends React.Component {
 }
 
 function AppContainer({ uwave, mediaSources }) {
-  const isMobile = useMediaQuery('(max-width: 767px)');
   const activeOverlay = useSelector((state) => state.activeOverlay);
   const isConnected = useSelector(isConnectedSelector);
   const settings = useSelector(settingsSelector);
@@ -80,9 +78,7 @@ function AppContainer({ uwave, mediaSources }) {
     onCloseOverlay,
   };
 
-  const app = isMobile
-    ? <MobileApp {...props} />
-    : <DesktopApp {...props} />;
+  const app = <DesktopApp {...props} />;
 
   return (
     <ThemeProvider theme={theme}>

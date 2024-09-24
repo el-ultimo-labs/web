@@ -67,7 +67,7 @@ you can use the standalone `serve` script:
 npm run serve
 ```
 
-## Deploying to bluggo.duckdns.org
+## Deploying to bluggo.ariedro.dev
 
 Remember to have the ssh keys installed in your `.ssh` dir
 

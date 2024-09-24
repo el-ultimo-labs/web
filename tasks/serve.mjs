@@ -46,7 +46,7 @@ app.listen(port);
 const serverUrl = new URL(process.env.SERVER_URL || `http://localhost:${serverPort}/`);
 
 const apiUrl = '/api';
-const socketUrl = `wss://bluggo.duckdns.org/api`;
+const socketUrl = `wss://bluggo.ariedro.dev/api`;
 
 app.use(apiUrl, createProxyMiddleware({
   target: serverUrl.href,
